@@ -111,9 +111,10 @@ if __name__ == "__main__":
     print(p2_strat)
 
     counter = Counter()
+    counter2 = Counter()
     for i in range(1000000):
         counter.update(play_game(p1_strat, p2_strat))
-        counter.update(play_game(p2_strat, p1_strat))
+        counter2.update(play_game(p2_strat, p1_strat))
 
     #NOTE:
     #currently setup for two random pure strategies
@@ -121,14 +122,14 @@ if __name__ == "__main__":
     #for i in range(1000000):
     #    if random.random() < 0.5:
     #        counter.update(play_game(p1_strat_mixed1, p2_strat))
-    #        counter.update(play_game(p2_strat, p1_strat_mixed1))
+    #        counter2.update(play_game(p2_strat, p1_strat_mixed1))
     #    else:
     #        counter.update(play_game(p1_strat_mixed2, p2_strat))
-    #        counter.update(play_game(p2_strat, p1_strat_mixed2))
+    #        counter2.update(play_game(p2_strat, p1_strat_mixed2))
 
     print(counter)
-    p1_win_rate = counter['1'] / (counter['1'] + counter['2'])
-    p2_win_rate = counter['2'] / (counter['1'] + counter['2'])
+    p1_win_rate = (counter['1'] + counter2['2']) / (counter['1'] + counter['2'] + counter2['1'] + counter2['2'])
+    p2_win_rate = (counter['2'] + counter2['1']) / (counter['1'] + counter['2'] + counter2['1'] + counter2['2'])
 
     print(f"Player 1 win rate: {p1_win_rate}")
     print(f"Player 2 win rate: {p2_win_rate}")
