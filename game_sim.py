@@ -81,12 +81,13 @@ def play_game(player1_strat, player2_strat):
 
     p2_in_or_out = get_in_out_p2(player2_strat, p1_in_or_out, p_or_c)
 
-    result = get_result(random_num, p1_in_or_out, p2_in_or_out)
-
-    if result[0] > result[1]:
+    return get_result(random_num, p1_in_or_out, p2_in_or_out)
+    
+def get_winner(p1_score, p2_score):
+    if p1_score > p2_score:
         #print(f"Player 1 wins: {result[0]} to {result[1]}")
         return '1'
-    elif result[0] < result[1]:
+    elif p1_score < p2_score:
         #print(f"Player 2 wins: {result[1]} to {result[0]}")
         return '2'
     else:
@@ -102,6 +103,11 @@ def random_strat():
             random.choice(['in|p1_in_&_composite', 'out|p1_in_&_composite',]),
             random.choice(['in|p1_out_&_composite', 'out|p1_out_&_composite',])]
 
+def find_best_pure_strat():
+    best_strat = None
+    best_strat_score = 0
+    pass
+
 if __name__ == "__main__":
     #p1_strat = ['low', 'in|yes', 'in|no', 'in|p1_in_&_prime', 'in|p1_in_&_composite', 'in|p1_out_&_prime', 'in|p1_out_&_composite']
     #p2_strat = ['low', 'in|yes', 'in|no', 'in|p1_in_&_prime', 'in|p1_in_&_composite', 'in|p1_out_&_prime', 'in|p1_out_&_composite']
@@ -110,11 +116,20 @@ if __name__ == "__main__":
     p2_strat = random_strat()
     print(p2_strat)
 
+    p1_total_score = 0
+    p2_total_score = 0
     counter = Counter()
     counter2 = Counter()
-    for i in range(1000000):
-        counter.update(play_game(p1_strat, p2_strat))
-        counter2.update(play_game(p2_strat, p1_strat))
+    runs = 1000000
+    for i in range(runs):
+        curr_result1 = play_game(p1_strat, p2_strat)
+        p1_total_score += curr_result1[0]
+        p2_total_score += curr_result1[1]
+        curr_result2 = play_game(p2_strat, p1_strat)
+        p1_total_score += curr_result2[1]
+        p2_total_score += curr_result2[0]
+        counter.update(get_winner(curr_result1[0], curr_result2[1]))
+        counter2.update(get_winner(curr_result2[1], curr_result1[0]))
 
     #NOTE:
     #currently setup for two random pure strategies
@@ -127,9 +142,11 @@ if __name__ == "__main__":
     #        counter.update(play_game(p1_strat_mixed2, p2_strat))
     #        counter2.update(play_game(p2_strat, p1_strat_mixed2))
 
-    print(counter)
     p1_win_rate = (counter['1'] + counter2['2']) / (counter['1'] + counter['2'] + counter2['1'] + counter2['2'])
+    p1_average_score = p1_total_score/runs
     p2_win_rate = (counter['2'] + counter2['1']) / (counter['1'] + counter['2'] + counter2['1'] + counter2['2'])
+    p2_average_score = p2_total_score/runs
 
-    print(f"Player 1 win rate: {p1_win_rate}")
-    print(f"Player 2 win rate: {p2_win_rate}")
+    print(counter)
+    print(f"Player 1 win rate: {p1_win_rate} with an average score of {p1_average_score}")
+    print(f"Player 2 win rate: {p2_win_rate} with an average score of {p2_average_score}")
