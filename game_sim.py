@@ -1,5 +1,4 @@
 import random
-from collections import Counter
 import itertools
 
 # Number is 1-3
@@ -47,6 +46,9 @@ def get_in_out_p2(player2_strat, p1_in_or_out, p_or_c):
             return player2_strat[6].split('|')[0]
     
 def is_prime(num):
+    if num == 2:
+        return 'prime'
+
     if num > 1:
         for i in range(2, int(num/2)+1):
             if num % i == 0:
@@ -107,8 +109,8 @@ def random_strat():
 def run_game(runs, p1_strat, p2_strat, isPrint):
     p1_total_score = 0
     p2_total_score = 0
-    counter = Counter()
-    counter2 = Counter()
+    p1_wins = 0
+    p2_wins = 0
     for i in range(runs):
         curr_result1 = play_game(p1_strat, p2_strat)
         p1_total_score += curr_result1[0]
@@ -116,22 +118,32 @@ def run_game(runs, p1_strat, p2_strat, isPrint):
         curr_result2 = play_game(p2_strat, p1_strat)
         p1_total_score += curr_result2[1]
         p2_total_score += curr_result2[0]
-        counter.update(get_winner(curr_result1[0], curr_result2[1]))
-        counter2.update(get_winner(curr_result2[1], curr_result1[0]))
+        winner1 = get_winner(curr_result1[0], curr_result2[1])
+        if winner1 == '1':
+            p1_wins += 1
+        elif winner1 == '2':
+            p2_wins += 1
+        winner2 = get_winner(curr_result2[1], curr_result1[0])
+        if winner2 == '1':
+            p1_wins += 1
+        elif winner2 == '2':
+            p2_wins += 1
 
-    p1_win_rate = (counter['1'] + counter2['2']) / (counter['1'] + counter['2'] + counter2['1'] + counter2['2'])
+
+    p1_win_rate = p1_wins / (p1_wins + p2_wins)
     p1_average_score = p1_total_score/runs
-    p2_win_rate = (counter['2'] + counter2['1']) / (counter['1'] + counter['2'] + counter2['1'] + counter2['2'])
+    p2_win_rate = p2_wins / (p1_wins + p2_wins)
     p2_average_score = p2_total_score/runs
 
     if isPrint:
         print(p1_strat)
         print(p2_strat)
-        print(counter)
-        print(f"Player 1 win rate: {p1_win_rate} with an average score of {p1_average_score}")
-        print(f"Player 2 win rate: {p2_win_rate} with an average score of {p2_average_score}")
+        print(p1_wins)
+        print(p2_wins)
+        print(f"Player 1 win rate: {p1_win_rate} with an average score of {p1_average_score} and a total score of {p1_total_score}")
+        print(f"Player 2 win rate: {p2_win_rate} with an average score of {p2_average_score} and a total score of {p2_total_score}")
 
-    return (p1_win_rate, p1_average_score, p2_win_rate, p2_average_score)
+    return (p1_win_rate, p1_average_score, p2_win_rate, p2_average_score, p1_total_score, p2_total_score)
 
 def find_best_pure_strat():
     choices = [['low', 'middle', 'high'],
@@ -170,16 +182,18 @@ def find_best_pure_strat():
 if __name__ == "__main__":
     #EX: p1_strat = ['low', 'in|yes', 'in|no', 'in|p1_in_&_prime', 'in|p1_in_&_composite', 'in|p1_out_&_prime', 'in|p1_out_&_composite']
     #EX: p2_strat = ['low', 'in|yes', 'in|no', 'in|p1_in_&_prime', 'in|p1_in_&_composite', 'in|p1_out_&_prime', 'in|p1_out_&_composite']
-    p1_strat = random_strat()
-    p2_strat = random_strat()
+    #p1_strat = random_strat()
+    #p2_strat = random_strat()
+    p1_strat = ['high', 'in|yes', 'out|no', 'in|p1_in_&_prime', 'in|p1_out_&_prime', 'in|p1_in_&_composite', 'in|p1_out_&_composite']
+    p2_strat = ['low', 'out|yes', 'in|no', 'in|p1_in_&_prime', 'in|p1_out_&_prime', 'in|p1_in_&_composite', 'in|p1_out_&_composite']
 
-    #run_game(1000000, p1_strat, p2_strat, True)
+    run_game(10000, p1_strat, p2_strat, True)
 
-    pure_strat = find_best_pure_strat()
-    best_pure_strat = pure_strat[0]
-    best_pure_strat_win_rate = pure_strat[1]
-    best_pure_strat_score = pure_strat[2]
+    # pure_strat = find_best_pure_strat()
+    # best_pure_strat = pure_strat[0]
+    # best_pure_strat_win_rate = pure_strat[1]
+    # best_pure_strat_score = pure_strat[2]
 
-    print(f"Best pure strategy: {best_pure_strat}")
-    print(f"Best pure strategy win rate: {best_pure_strat_win_rate}")
-    print(f"Best pure strategy score: {best_pure_strat_score}")
+    # print(f"Best pure strategy: {best_pure_strat}")
+    # print(f"Best pure strategy win rate: {best_pure_strat_win_rate}")
+    # print(f"Best pure strategy score: {best_pure_strat_score}")
