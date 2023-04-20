@@ -198,7 +198,7 @@ if __name__ == "__main__":
     run_game(1000000, p1_strat, p2_strat, True)
 
     # top_10_pure_strats = find_top_10_pure_strats(10000)
-    # with open('output.txt', 'w') as f:
+    # with open('best_pure_strats.txt', 'w') as f:
     #     for idx, (strat, win_rate, score) in enumerate(top_10_pure_strats):
     #         print(f"{idx + 1}. Strategy: {strat}, Win Rate: {win_rate}, Average Score: {score}")
     #         f.write(f"{idx + 1}. Strategy: {strat}, Win Rate: {win_rate}, Average Score: {score}" + '\n')

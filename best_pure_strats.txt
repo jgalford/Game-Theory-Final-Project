@@ -1,0 +1,10 @@
+1. Strategy: ('middle', 'out|yes', 'in|no', 'in|p1_in_&_prime', 'in|p1_out_&_prime', 'in|p1_in_&_composite', 'in|p1_out_&_composite'), Win Rate: 0.718559814256161, Average Score: 5.444686458333334
+2. Strategy: ('middle', 'out|yes', 'in|no', 'in|p1_in_&_prime', 'in|p1_out_&_prime', 'in|p1_in_&_composite', 'out|p1_out_&_composite'), Win Rate: 0.5649879612277283, Average Score: 5.384583854166668
+3. Strategy: ('high', 'in|yes', 'out|no', 'in|p1_in_&_prime', 'in|p1_out_&_prime', 'in|p1_in_&_composite', 'in|p1_out_&_composite'), Win Rate: 0.796303224224533, Average Score: 5.332344791666666
+4. Strategy: ('middle', 'out|yes', 'in|no', 'in|p1_in_&_prime', 'in|p1_out_&_prime', 'out|p1_in_&_composite', 'in|p1_out_&_composite'), Win Rate: 0.5581801074079328, Average Score: 5.329294791666665
+5. Strategy: ('high', 'in|yes', 'out|no', 'in|p1_in_&_prime', 'in|p1_out_&_prime', 'in|p1_in_&_composite', 'out|p1_out_&_composite'), Win Rate: 0.6645563532756654, Average Score: 5.278455208333336
+6. Strategy: ('middle', 'out|yes', 'in|no', 'in|p1_in_&_prime', 'in|p1_out_&_prime', 'out|p1_in_&_composite', 'out|p1_out_&_composite'), Win Rate: 0.41267887446746054, Average Score: 5.276617708333335
+7. Strategy: ('middle', 'out|yes', 'in|no', 'out|p1_in_&_prime', 'in|p1_out_&_prime', 'in|p1_in_&_composite', 'in|p1_out_&_composite'), Win Rate: 0.7015443834159724, Average Score: 5.2220109374999995
+8. Strategy: ('high', 'in|yes', 'out|no', 'in|p1_in_&_prime', 'in|p1_out_&_prime', 'out|p1_in_&_composite', 'in|p1_out_&_composite'), Win Rate: 0.6593459007061448, Average Score: 5.221001041666666
+9. Strategy: ('low', 'in|yes', 'in|no', 'in|p1_in_&_prime', 'in|p1_out_&_prime', 'in|p1_in_&_composite', 'in|p1_out_&_composite'), Win Rate: 0.6544810900104391, Average Score: 5.1707520833333325
+10. Strategy: ('middle', 'in|yes', 'in|no', 'in|p1_in_&_prime', 'in|p1_out_&_prime', 'in|p1_in_&_composite', 'in|p1_out_&_composite'), Win Rate: 0.6540533399104875, Average Score: 5.1694114583333315
