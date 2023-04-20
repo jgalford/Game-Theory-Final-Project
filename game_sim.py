@@ -88,13 +88,13 @@ def play_game(player1_strat, player2_strat):
     
 def get_winner(p1_score, p2_score):
     if p1_score > p2_score:
-        #print(f"Player 1 wins: {result[0]} to {result[1]}")
+        #print(f"Player 1 wins: {p1_score} to {p2_score}")
         return '1'
     elif p1_score < p2_score:
-        #print(f"Player 2 wins: {result[1]} to {result[0]}")
+        #print(f"Player 2 wins: {p2_score} to {p1_score}")
         return '2'
     else:
-        #print(f"Tie: {result[0]} to {result[1]}")
+        #print(f"Tie: {p1_score} to {p2_score}")
         return 'T'
 
 def random_strat():
@@ -118,12 +118,12 @@ def run_game(runs, p1_strat, p2_strat, isPrint):
         curr_result2 = play_game(p2_strat, p1_strat)
         p1_total_score += curr_result2[1]
         p2_total_score += curr_result2[0]
-        winner1 = get_winner(curr_result1[0], curr_result2[1])
+        winner1 = get_winner(curr_result1[0], curr_result1[1])
         if winner1 == '1':
             p1_wins += 1
         elif winner1 == '2':
             p2_wins += 1
-        winner2 = get_winner(curr_result2[1], curr_result1[0])
+        winner2 = get_winner(curr_result2[1], curr_result2[0])
         if winner2 == '1':
             p1_wins += 1
         elif winner2 == '2':
@@ -138,14 +138,27 @@ def run_game(runs, p1_strat, p2_strat, isPrint):
     if isPrint:
         print(p1_strat)
         print(p2_strat)
-        print(p1_wins)
-        print(p2_wins)
         print(f"Player 1 win rate: {p1_win_rate} with an average score of {p1_average_score} and a total score of {p1_total_score}")
         print(f"Player 2 win rate: {p2_win_rate} with an average score of {p2_average_score} and a total score of {p2_total_score}")
 
     return (p1_win_rate, p1_average_score, p2_win_rate, p2_average_score, p1_total_score, p2_total_score)
 
-def find_best_pure_strat():
+def find_average_winrate_and_score(runs, target_strat, all_strats):
+    total_win_rate = 0
+    total_score = 0
+    num_strats = len(all_strats)
+
+    for strat2 in all_strats:
+        win_rate1, score1, win_rate2, score2, total_score1, total_score2 = run_game(runs, target_strat, strat2, False)
+        total_win_rate += win_rate1
+        total_score += score1
+    
+    avg_win_rate = total_win_rate/num_strats
+    avg_score = total_score/num_strats
+
+    return target_strat, avg_win_rate, avg_score
+
+def find_top_10_pure_strats(runs):
     choices = [['low', 'middle', 'high'],
                ['in|yes', 'out|yes'],
                ['in|no', 'out|no'],
@@ -155,39 +168,42 @@ def find_best_pure_strat():
                ['in|p1_out_&_composite', 'out|p1_out_&_composite']]
     all_pure_strats = list(itertools.product(*choices))
 
-    # print(all_pure_strats)
-    # print(len(all_pure_strats))
-    
-    best_strat = None
-    best_strat_win_rate = 0
-    best_strat_score = 0
+    top_10_strats = [([None], 0, 0)] * 10
     i = 1
 
+    def update_top_10_strats(strat, win_rate, score):
+        for idx, (s, wr, sc) in enumerate(top_10_strats):
+            if score > sc:
+                if strat not in [s for s, _, _ in top_10_strats]:
+                    top_10_strats.insert(idx, (strat, win_rate, score))
+                    top_10_strats.pop(-1)
+                    break
+
     for strat1 in all_pure_strats:
-        for strat2 in all_pure_strats:
-            result = run_game(10000, strat1, strat2, False)
-            if result[1] > best_strat_score:
-                best_strat = strat1
-                best_strat_win_rate = result[0]
-                best_strat_score = result[1]
-            if result[3] > best_strat_score:
-                best_strat = strat2
-                best_strat_win_rate = result[2]
-                best_strat_score = result[3]
+        result = find_average_winrate_and_score(runs, strat1, all_pure_strats)
+        update_top_10_strats(result[0], result[1], result[2])
         print('Processing: ' + str(i) + ' of ' + str(len(all_pure_strats)))
         i += 1
-    
-    return (best_strat, best_strat_win_rate, best_strat_score)
+
+    return top_10_strats
 
 if __name__ == "__main__":
     #EX: p1_strat = ['low', 'in|yes', 'in|no', 'in|p1_in_&_prime', 'in|p1_in_&_composite', 'in|p1_out_&_prime', 'in|p1_out_&_composite']
     #EX: p2_strat = ['low', 'in|yes', 'in|no', 'in|p1_in_&_prime', 'in|p1_in_&_composite', 'in|p1_out_&_prime', 'in|p1_out_&_composite']
     #p1_strat = random_strat()
     #p2_strat = random_strat()
-    p1_strat = ['high', 'in|yes', 'out|no', 'in|p1_in_&_prime', 'in|p1_out_&_prime', 'in|p1_in_&_composite', 'in|p1_out_&_composite']
-    p2_strat = ['low', 'out|yes', 'in|no', 'in|p1_in_&_prime', 'in|p1_out_&_prime', 'in|p1_in_&_composite', 'in|p1_out_&_composite']
+    p1_strat = ['middle', 'out|yes', 'in|no', 'in|p1_in_&_prime', 'in|p1_out_&_prime', 'in|p1_in_&_composite', 'in|p1_out_&_composite']
+    p2_strat = ['high', 'in|yes', 'out|no', 'in|p1_in_&_prime', 'in|p1_out_&_prime', 'in|p1_in_&_composite', 'in|p1_out_&_composite']
 
-    run_game(10000, p1_strat, p2_strat, True)
+    run_game(1000000, p1_strat, p2_strat, True)
+
+    # top_10_pure_strats = find_top_10_pure_strats(10000)
+    # with open('output.txt', 'w') as f:
+    #     for idx, (strat, win_rate, score) in enumerate(top_10_pure_strats):
+    #         print(f"{idx + 1}. Strategy: {strat}, Win Rate: {win_rate}, Average Score: {score}")
+    #         f.write(f"{idx + 1}. Strategy: {strat}, Win Rate: {win_rate}, Average Score: {score}" + '\n')
+
+
 
     # pure_strat = find_best_pure_strat()
     # best_pure_strat = pure_strat[0]
