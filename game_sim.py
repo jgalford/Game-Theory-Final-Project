@@ -241,10 +241,16 @@ def find_best_mixed(iterator, runs):
 
     def update_best_mixed_strats(strat1, strat2, percent1, win_rate, score):
         for idx, (s1, s2, p, wr, sc) in enumerate(top_10_mixed_strats):
+            if (s1, s2) == (strat1, strat2) or (s1, s2) == (strat2, strat1):
+                if score > sc:
+                    top_10_mixed_strats[idx] = (strat1, strat2, percent1, win_rate, score)
+                return
+
+        for idx, (s1, s2, p, wr, sc) in enumerate(top_10_mixed_strats):
             if score > sc:
-                    top_10_mixed_strats.insert(idx, (strat1, strat2, percent1, win_rate, score))
-                    top_10_mixed_strats.pop(-1)
-                    break
+                top_10_mixed_strats.insert(idx, (strat1, strat2, percent1, win_rate, score))
+                top_10_mixed_strats.pop(-1)
+                break
             
     for strat1, strat2 in mixed_strat_set:
         for i in range(iterator):
@@ -257,8 +263,6 @@ def find_best_mixed(iterator, runs):
     return top_10_mixed_strats
 
 if __name__ == "__main__":
-    #EX: p1_strat = ['low', 'in|yes', 'in|no', 'in|p1_in_&_prime', 'in|p1_in_&_composite', 'in|p1_out_&_prime', 'in|p1_out_&_composite']
-    #EX: p2_strat = ['low', 'in|yes', 'in|no', 'in|p1_in_&_prime', 'in|p1_in_&_composite', 'in|p1_out_&_prime', 'in|p1_out_&_composite']
     #p1_strat = random_strat()
     #p2_strat = random_strat()
     #p1_strat = ['middle', 'out|yes', 'in|no', 'in|p1_in_&_prime', 'in|p1_out_&_prime', 'in|p1_in_&_composite', 'in|p1_out_&_composite']
